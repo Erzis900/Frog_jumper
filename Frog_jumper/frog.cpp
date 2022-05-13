@@ -1,8 +1,8 @@
 #include "frog.hpp"
 
 Frog::Frog() {
-    size.x = 50;
-    size.y = 50;
+    size.x = 96;
+    size.y = 96;
 
     pos.x = 0;
     pos.y = 0;

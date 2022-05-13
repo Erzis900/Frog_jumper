@@ -2,13 +2,32 @@
 
 #include <iostream>
 #include "frog.hpp"
+#include "map.hpp"
 
 int main() {
-    sf::Vector2i window_size(800, 600);
+    sf::Vector2i window_size(960, 768);
 
     sf::RenderWindow window(sf::VideoMode(window_size.x, window_size.y), "Frog jumper");
 
+    Map map;
     Frog frog;
+
+    const int level[] =
+    {
+        90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+        90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+        90, 90, 90, 90, 90, 64, 90, 90, 90, 90,
+        64, 64, 64, 64, 90, 90, 64, 64, 64, 90,
+        90, 90, 90, 64, 64, 64, 64, 90, 64, 64,
+        90, 90, 90, 90, 90, 64, 90, 64, 90, 90,
+        90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+        90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+    };
+
+    if (!map.load("../Frog_Jumper/art/tileset.jpg", sf::Vector2u(32, 32), level, 10, 8))
+        return -1;
+
+    map.setScale(3, 3);
 
     while (window.isOpen()) {
         sf::Event event;
@@ -35,8 +54,9 @@ int main() {
             }
         }
 
-        window.clear(sf::Color::Black);
+        window.clear(sf::Color::Blue);
 
+        window.draw(map);
         window.draw(frog);
 
         window.display();
