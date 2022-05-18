@@ -2,10 +2,10 @@
 
 Frog::Frog() {
     size.x = 96;
-    size.y = 96;
+    size.y = 94;
 
-    pos.x = 0;
-    pos.y = 0;
+    pos.x = 5*96;
+    pos.y = 7*96;
 
     setSize(size);
     setPosition(pos);
