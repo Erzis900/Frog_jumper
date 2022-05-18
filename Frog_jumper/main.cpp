@@ -11,7 +11,7 @@ class Screen
 {
 public:
     bool active = false;
-    void drawScreen(sf::RenderWindow &window)
+    virtual void drawScreen(sf::RenderWindow &window)
     {
 
     }
@@ -63,7 +63,7 @@ public:
 
     GameScreen()
     {
-        backgroundTexture.loadFromFile("art/tileset.jpg", sf::IntRect(672, 96, 32, 32));
+        backgroundTexture.loadFromFile("../Frog_Jumper/art/tileset.jpg", sf::IntRect(672, 96, 32, 32));
         backgroundTexture.setRepeated(true);
         background.setTexture(backgroundTexture);
         background.setScale(5, 5);
@@ -103,7 +103,19 @@ public:
 class GameOverScreen : public Screen
 {
 public:
+    GameOverScreen()
+    {
+        tex.loadFromFile("../Frog_Jumper/art/endscreen.png");
+        sprite.setTexture(tex);
+    }
 
+    void drawScreen(sf::RenderWindow &window)
+    {
+        window.draw(sprite);
+    }
+private:
+    sf::Texture tex;
+    sf::Sprite sprite;
 };
 
 void moveUpDown(sf::Event &event, GameScreen &game)
@@ -121,6 +133,7 @@ sf::Vector2f calculateOrigin(Frog pl)
     float y = pl.getPosition().y+pl.getGlobalBounds().height/2;
     return {x, y};
 }
+
 void moveLeftRight(GameScreen &game, GameOverScreen &end)
 {
     Wood *tmp = NULL;
@@ -136,7 +149,6 @@ void moveLeftRight(GameScreen &game, GameOverScreen &end)
         //zaba w wode
         game.active = false;
         end.active = true;
-        cout << "endgame get gut" << endl;
     }
     else
     {
