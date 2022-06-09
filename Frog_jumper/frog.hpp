@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
-class Frog : public sf::RectangleShape {
+class Frog : public sf::Sprite {
 public:
     Frog();
 
@@ -12,6 +12,8 @@ public:
 private:
     sf::Vector2f size;
     sf::Vector2f pos;
+
+    sf::Texture tex;
 };
 
 #endif // FROG_HPP

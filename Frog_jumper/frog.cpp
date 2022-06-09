@@ -1,15 +1,17 @@
 #include "frog.hpp"
 
 Frog::Frog() {
+    tex.loadFromFile("art/frog.png");
+    setTexture(tex);
+
     size.x = 96;
     size.y = 94;
 
     pos.x = 5*96;
     pos.y = 7*96;
 
-    setSize(size);
+    setScale(0.48, 0.47);
     setPosition(pos);
-    setFillColor(sf::Color::Green);
 }
 
 void Frog::handle_movement(sf::Keyboard::Key key) {

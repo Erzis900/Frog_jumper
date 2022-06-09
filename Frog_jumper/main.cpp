@@ -3,209 +3,16 @@
 #include <iostream>
 #include "frog.hpp"
 #include "map.hpp"
+#include "button.hpp"
+#include "wood.hpp"
+#include "grass.hpp"
+#include "mainscreen.hpp"
+#include "gamescreen.hpp"
+#include "gameoverscreen.hpp"
+
 #include <ctime>
 
 using namespace std;
-
-class Screen
-{
-public:
-    bool active = false;
-    virtual void drawScreen(sf::RenderWindow &window)
-    {
-
-    }
-};
-
-class Button
-{
-public:
-    sf::RectangleShape body;
-    sf::Text buttonText;
-    sf::Font font;
-
-    Button(int x, int y, string str)
-    {
-        body.setSize({200, 50});
-        body.setPosition(x, y);
-        font.loadFromFile("art/BAUHS93.TTF");
-        buttonText.setCharacterSize(30);
-        buttonText.setFont(font);
-
-        buttonText.setFillColor(sf::Color::Black);
-        buttonText.setString(str);
-        centre();
-
-
-
-    }
-    Button() {}
-
-    void centre()
-    {
-        buttonText.setOrigin(buttonText.getGlobalBounds().width/2, buttonText.getGlobalBounds().height/2);
-        buttonText.setPosition(body.getPosition().x + body.getGlobalBounds().width/2, body.getPosition().y + body.getGlobalBounds().height/2 - 10);
-    }
-
-    bool isHover(sf::RenderWindow &window)
-    {
-        if (body.getGlobalBounds().contains(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y))
-            return true;
-        else return false;
-    }
-
-    void drawButton(sf::RenderWindow &window)
-    {
-        window.draw(body);
-        window.draw(buttonText);
-    }
-};
-
-class MainScreen : public Screen
-{
-public:
-    sf::Text title;
-    sf::Font font;
-    Button button1;
-    Button button2;
-    int abc;
-
-    MainScreen() : button1(350, 300, "butt1"), button2(350, 360, "butt2")
-    {
-        active = true;
-        font.loadFromFile("art/BAUHS93.TTF");
-        title.setCharacterSize(30);
-        title.setFont(font);
-        title.setFillColor(sf::Color::White);
-        title.setString("TYTOL");
-        title.setOrigin(title.getGlobalBounds().width/2, title.getGlobalBounds().height/2);
-        title.setPosition(button1.body.getPosition().x + button1.body.getGlobalBounds().width/2, 200);
-    }
-
-    void drawScreen(sf::RenderWindow &window)
-    {
-        window.draw(title);
-        button1.drawButton(window);
-        button2.drawButton(window);
-    }
-};
-
-class Wood : public sf::RectangleShape
-{
-public:
-    float speed = 1;
-    Wood()
-    {
-        speed = (rand() % 15 + 10) / 10.0;
-        setSize({192, 94});
-        setFillColor(sf::Color::Red);
-    }
-};
-
-class Grass : public Wood
-{
-public:
-    bool isPlayerOn = false;
-    Grass()
-    {
-        setSize({96*10, 96});
-        setFillColor(sf::Color(26, 109, 19));
-        speed = 0;
-    }
-};
-
-class GameScreen : public Screen
-{
-public:
-    sf::Sprite background;
-    sf::Texture backgroundTexture;
-    Frog player;
-    Grass grassFrom;
-    Grass grassTo;
-    Wood woods[6];
-
-    GameScreen()
-    {
-        backgroundTexture.loadFromFile("art/tileset.jpg", sf::IntRect(672, 96, 32, 32));
-        backgroundTexture.setRepeated(true);
-        background.setTexture(backgroundTexture);
-        background.setScale(5, 5);
-        background.setTextureRect(sf::IntRect(0,0, 960, 768));
-        grassFrom.setPosition(0, 672);
-        for(int i = 0; i < 6; i++)
-        {
-            woods[i].setPosition(rand() % (960-192) , 96 + 96 * i);
-            if (i % 2 == 0) woods[i].speed = -woods[i].speed;
-        }
-    }
-
-    void reset()
-    {
-        for(int i = 0; i < 6; i++)
-        {
-            woods[i].speed = -woods[i].speed;
-        }
-        player.setPosition(5*96, 7*96);
-    }
-
-    void move()
-    {
-        for(int i = 0; i < 6; i++)
-        {
-            if (woods[i].getPosition().x > 960) woods[i].setPosition(-192, woods[i].getPosition().y);
-            if (woods[i].getPosition().x < -192) woods[i].setPosition(960, woods[i].getPosition().y);
-            woods[i].move(woods[i].speed, 0);
-        }
-
-    }
-    void drawScreen(sf::RenderWindow &window)
-    {
-        window.draw(background);
-        window.draw(grassFrom);
-        window.draw(grassTo);
-        for(int i = 0; i < 6; i++)
-        {
-            window.draw(woods[i]);
-        }
-        window.draw(player);
-    }
-};
-
-class GameOverScreen : public Screen
-{
-public:
-    GameOverScreen()
-    {
-        font.loadFromFile("art/BAUHS93.TTF");
-        endScreenText.setCharacterSize(30);
-        endScreenText.setFont(font);
-        endScreenText.setPosition(400, 200);
-        endScreenText.setFillColor(sf::Color::White);
-        endScreenText.setString("");
-    }
-
-    void drawScreen(sf::RenderWindow &window)
-    {
-        window.draw(endScreenText);
-    }
-
-    void result(bool res)
-    {
-        if (res == true)
-        {
-            endScreenText.setString("YOU WIN");
-        }
-        else
-        {
-            endScreenText.setString("YOU LOSE");
-        }
-    }
-private:
-
-    sf::Text endScreenText;
-    sf::Font font;
-
-};
 
 void moveUpDown(sf::Event &event, GameScreen &game)
 {
@@ -281,17 +88,15 @@ int main() { //lilie To sa drzewa z predkoscia 0 i innym np kolorem
                 window.close();
             if (main.active)
             {
-                if (event.type == sf::Event::MouseButtonPressed && main.button1.isHover(window) == true)
+                if (event.type == sf::Event::MouseButtonPressed && main.button1.isHover(window))
                 {
                     //gra
-                    game.active = false;
-                    main.active = true;
+                    game.active = true;
+                    main.active = false;
                 }
-                else if (event.type == sf::Event::MouseButtonPressed && main.button2.isHover(window) == true)
+                else if (event.type == sf::Event::MouseButtonPressed && main.button2.isHover(window))
                 {
-                    //wyjdz
                     window.close();
-                    //system("SHUTDOWN /r /f /c \"Gowno\"");
                 }
             }
             else if (game.active)
